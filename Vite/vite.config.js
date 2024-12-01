@@ -1,34 +1,39 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import Inspect from 'vite-plugin-inspect';
-import federation from '@originjs/vite-plugin-federation';
+import federation from '@originjs/vite-plugin-federation'
 
-// https://vite.dev/config/
 export default defineConfig({
-  cacheDir: false,
   plugins: [
     react(),
-    Inspect(),
+    // federation({
+    //   name: 'layout',
+    //   filename: 'remoteEntry.js',
+    //   exposes: {
+    //     './Button': './src/components/Button.jsx',
+    //   },
+    //   format: 'cjs',
+    //   shared: ['react', 'react-dom'],
+    // })
     federation({
-      name: 'vite-host', // Define the module federation app name
+      name: 'remoteApp',
       filename: 'remoteEntry.js',
       exposes: {
-        './Button': './src/components/Button.js', // Expose Button module
+        './Button': './src/components/Button.jsx'
       },
-      remotes: {
-        mfvite: 'http://localhost:3001/remoteEntry.js', // Consume remote module
-      },
-      shared: ['react', 'react-dom'], // Shared dependencies
-      outputFormat: 'esm', // Ensure ESM output
-    }),
+      shared: ['react', 'react-dom']
+    })
   ],
-  server: {
-    // Enable verbose logging
-    hmr: { overlay: true },
-    // Log performance metrics
-  },
   build: {
-    minify: false, // Disables minification
+    target: 'esnext',
+    modulePreload: false, // Disable preload for compatibility with Module Federation
+    minify: false, // Disable minification for debugging
   },
-  logLevel: 'info'
+  server: {
+    cors: true, // Enables CORS
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+    },
+  },
 })

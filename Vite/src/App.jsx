@@ -1,17 +1,9 @@
-import React, { useState,Suspense,lazy } from 'react'
-// import Button from 'remoteApp/Button';
-
-const RemoteButton = lazy(() => import('mfvite/Button'));
+import React, { useState,Suspense } from 'react'
+// const RemoteButton = React.lazy(() => import('remote/Button')); // Importing Button from Webpack remote
 
 
 function App() {
   const [count, setCount] = useState(0)
-
-
-  const handleClick = () => {
-    alert('Button clicked from Vite!');
-  };
-
 
   return (
     <>
@@ -29,13 +21,9 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <Suspense fallback={<div>Loading...</div>}>
-        <RemoteButton 
-          label="Click me from Webpack!" 
-          onClick={handleClick} 
-        />
-      </Suspense>
-
+      {/* <React.Suspense fallback="Loading...">
+      <RemoteButton label="Click Me!" onClick={() => alert('Button clicked!')} />
+    </React.Suspense> */}
     </>
   )
 }
